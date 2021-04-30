@@ -1,9 +1,8 @@
 {
   "version": 2,
-  "cli": {
-    "defaultCollection": "@nrwl/nest"
-  },
+  "cli": { "defaultCollection": "@nrwl/nest" },
   "defaultProject": "backend-api",
+  "generators": { "@nrwl/react": { "application": { "babel": true } } },
   "projects": {
     "backend-api": {
       "root": "apps/backend-api",
@@ -33,23 +32,222 @@
             }
           }
         },
-        "serve": {
+        "debug": {
           "executor": "@nrwl/node:execute",
           "options": {
-            "buildTarget": "backend-api:build"
+            "buildTarget": "api:build",
+            "inspect": true,
+            "port": 8771
           }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": { "buildTarget": "backend-api:build" }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/backend-api/**/*.ts"]
-          }
+          "options": { "lintFilePatterns": ["apps/backend-api/**/*.ts"] }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
           "outputs": ["coverage/apps/backend-api"],
           "options": {
             "jestConfig": "apps/backend-api/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "fe-mobile": {
+      "root": "apps/fe-mobile",
+      "sourceRoot": "apps/fe-mobile/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/web:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/fe-mobile",
+            "index": "apps/fe-mobile/src/index.html",
+            "main": "apps/fe-mobile/src/main.tsx",
+            "polyfills": "apps/fe-mobile/src/polyfills.ts",
+            "tsConfig": "apps/fe-mobile/tsconfig.app.json",
+            "assets": [
+              "apps/fe-mobile/src/assets",
+              "apps\\fe-mobile/src/manifest.json"
+            ],
+            "styles": ["apps/fe-mobile/src/styles.scss"],
+            "scripts": [],
+            "webpackConfig": "./apps/webpack.config.js"
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/fe-mobile/src/environments/environment.ts",
+                  "with": "apps/fe-mobile/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/web:dev-server",
+          "options": { "buildTarget": "fe-mobile:build" },
+          "configurations": {
+            "production": { "buildTarget": "fe-mobile:build:production" }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/fe-mobile/**/*.{ts,tsx,js,jsx}"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/fe-mobile"],
+          "options": {
+            "jestConfig": "apps/fe-mobile/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "cap": {
+          "executor": "@nxtend/capacitor:cap",
+          "options": { "cmd": "--help" }
+        },
+        "add": {
+          "executor": "@nxtend/capacitor:cap",
+          "options": { "cmd": "add", "packageInstall": true },
+          "configurations": {
+            "ios": { "cmd": "add ios" },
+            "android": { "cmd": "add android" }
+          }
+        },
+        "copy": {
+          "executor": "@nxtend/capacitor:cap",
+          "options": { "cmd": "copy", "packageInstall": false },
+          "configurations": {
+            "ios": { "cmd": "copy ios" },
+            "android": { "cmd": "copy android" }
+          }
+        },
+        "open": {
+          "executor": "@nxtend/capacitor:cap",
+          "options": { "cmd": "open", "packageInstall": false },
+          "configurations": {
+            "ios": { "cmd": "open ios" },
+            "android": { "cmd": "open android" }
+          }
+        },
+        "sync": {
+          "executor": "@nxtend/capacitor:cap",
+          "options": { "cmd": "sync", "packageInstall": true },
+          "configurations": {
+            "ios": { "cmd": "sync ios" },
+            "android": { "cmd": "sync android" }
+          }
+        },
+        "update": {
+          "executor": "@nxtend/capacitor:cap",
+          "options": { "cmd": "update", "packageInstall": true },
+          "configurations": {
+            "ios": { "cmd": "update ios" },
+            "android": { "cmd": "update android" }
+          }
+        }
+      }
+    },
+    "fe-mobile-e2e": {
+      "root": "apps/fe-mobile-e2e",
+      "sourceRoot": "apps/fe-mobile-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/fe-mobile-e2e/cypress.json",
+            "tsConfig": "apps/fe-mobile-e2e/tsconfig.e2e.json",
+            "devServerTarget": "fe-mobile:serve"
+          },
+          "configurations": {
+            "production": { "devServerTarget": "fe-mobile:serve:production" }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": { "lintFilePatterns": ["apps/fe-mobile-e2e/**/*.{js,ts}"] }
+        }
+      }
+    },
+    "common-utils": {
+      "root": "libs/common-utils",
+      "sourceRoot": "libs/common-utils/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": { "lintFilePatterns": ["libs/common-utils/**/*.ts"] }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/common-utils"],
+          "options": {
+            "jestConfig": "libs/common-utils/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "shared-backend": {
+      "root": "libs/shared-backend",
+      "sourceRoot": "libs/shared-backend/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": { "lintFilePatterns": ["libs/shared-backend/**/*.ts"] }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/shared-backend"],
+          "options": {
+            "jestConfig": "libs/shared-backend/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "shared-ui": {
+      "root": "libs/shared-ui",
+      "sourceRoot": "libs/shared-ui/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/shared-ui/**/*.{ts,tsx,js,jsx}"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/shared-ui"],
+          "options": {
+            "jestConfig": "libs/shared-ui/jest.config.js",
             "passWithNoTests": true
           }
         }

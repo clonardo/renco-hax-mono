@@ -1,0 +1,7 @@
+{
+  "name": "fe-mobile",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}

@@ -1,26 +1,29 @@
 {
   "implicitDependencies": {
+    "workspace.json": "*",
     "package.json": {
       "dependencies": "*",
       "devDependencies": "*"
     },
-    ".eslintrc.json": "*"
+    ".eslintrc.json": "*",
+    "tsconfig.json": "*",
+    "tslint.json": "*",
+    "nx.json": "*"
   },
-  "affected": {
-    "defaultBase": "master"
-  },
+  "affected": { "defaultBase": "master" },
   "npmScope": "renco-hax",
   "tasksRunnerOptions": {
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
-      "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
-      }
+      "options": { "cacheableOperations": ["build", "lint", "test", "e2e"] }
     }
   },
   "projects": {
-    "backend-api": {
-      "tags": []
-    }
+    "backend-api": { "tags": [] },
+    "fe-mobile": { "tags": [] },
+    "fe-mobile-e2e": { "tags": [], "implicitDependencies": ["fe-mobile"] },
+    "common-utils": { "tags": [] },
+    "shared-backend": { "tags": [] },
+    "shared-ui": { "tags": [] }
   }
 }

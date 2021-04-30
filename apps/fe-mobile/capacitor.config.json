@@ -1,0 +1,13 @@
+{
+  "appId": "com.renco.hax",
+  "appName": "fe-mobile",
+  "bundledWebRuntime": false,
+  "npmClient": "yarn",
+  "webDir": "../../dist/apps/fe-mobile",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {}
+}
